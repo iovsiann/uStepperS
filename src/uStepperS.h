@@ -709,7 +709,8 @@ public:
 	 *			
 	 */
 
-	void checkOrientation(float distance = 10);
+	bool checkOrientation(float distance = 10);
+	void setOrientation(bool orientation);
 	
 private: 
 

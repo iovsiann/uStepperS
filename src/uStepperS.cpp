@@ -98,14 +98,13 @@ float uStepperS::getDriverRPM( void )
 	return (float)velocity * this->velToRpm;
 }
 
-void uStepperS::checkOrientation(float distance)
+bool uStepperS::checkOrientation(float distance)
 {
 	float startAngle;
 	uint8_t inverted = 0;
 	uint8_t noninverted = 0;
 	this->disablePid();
-	this->shaftDir = 0;
-	this->driver.setShaftDirection(this->shaftDir);
+	this->setOrientation(0);
 	
 	startAngle = this->encoder.getAngleMoved();
 	this->moveAngle(distance);
@@ -158,10 +157,17 @@ void uStepperS::checkOrientation(float distance)
 
 	if(inverted > noninverted)
 	{
-		this->shaftDir = 1;
-		this->driver.setShaftDirection(this->shaftDir);
+		this->setOrientation(1);
 	}
 	this->enablePid();
+
+	return this->shaftDir;
+}
+
+void uStepperS::setOrientation(bool isInverted)
+{
+	this->shaftDir = isInverted;
+	this->driver.setShaftDirection(this->shaftDir);
 }
 
 void uStepperS::setup(	uint8_t mode, 
